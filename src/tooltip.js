@@ -92,10 +92,10 @@ class Tooltip extends Component {
 
   componentDidMount() {
     if (this.state.waitingForInteractions) {
-      InteractionManager.runAfterInteractions(() => {
+      //InteractionManager.runAfterInteractions(() => {
         this.measureChildRect();
         this.setState({ waitingForInteractions: false });
-      });
+      //});
     }
   }
 
@@ -107,9 +107,9 @@ class Tooltip extends Component {
     if (nextContent !== content && willBeVisible) {
       // The location of the child element may have changed based on
       // transition animations in the corresponding view, so remeasure
-      InteractionManager.runAfterInteractions(() => {
+      //InteractionManager.runAfterInteractions(() => {
         this.measureChildRect();
-      });
+      //});
     } else if (willBeVisible !== isVisible) {
       if (willBeVisible) {
         // We want to start the show animation only when contentSize is known
@@ -118,9 +118,9 @@ class Tooltip extends Component {
 
         // The location of the child element may have changed based on
         // transition animations in the corresponding view, so remeasure
-        InteractionManager.runAfterInteractions(() => {
+        //InteractionManager.runAfterInteractions(() => {
           this.measureChildRect();
-        });
+        //});
       } else {
         this._startAnimation({ show: false });
       }
@@ -208,7 +208,7 @@ class Tooltip extends Component {
       case 'top':
         return {
           paddingBottom: height,
-          top: tooltipOrigin.y,
+          top: tooltipOrigin.y - (this.props.marginBottom ? this.props.marginBottom : 0),
           left: tooltipOrigin.x,
         };
       case 'right':
@@ -541,6 +541,7 @@ class Tooltip extends Component {
   render() {
     const { measurementsFinished, placement, waitingForInteractions } = this.state;
     const { backgroundColor, children, content, isVisible, onClose } = this.props;
+
 
     const extendedStyles = this._getExtendedStyles();
     const contentStyle = [styles.content, ...extendedStyles.content];
