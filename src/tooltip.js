@@ -92,10 +92,17 @@ class Tooltip extends Component {
 
   componentDidMount() {
     if (this.state.waitingForInteractions) {
-      //InteractionManager.runAfterInteractions(() => {
-        this.measureChildRect();
-        this.setState({ waitingForInteractions: false });
-      //});
+      if (this.props.runAfterInteractions) {
+        InteractionManager.runAfterInteractions(() => {
+          this.measureChildRect();
+          this.setState({ waitingForInteractions: false });
+        });
+      } else {
+        InteractionManager.runAfterInteractions(() => {
+          this.measureChildRect();
+          this.setState({ waitingForInteractions: false });
+        });
+      }
     }
   }
 
@@ -107,9 +114,15 @@ class Tooltip extends Component {
     if (nextContent !== content && willBeVisible) {
       // The location of the child element may have changed based on
       // transition animations in the corresponding view, so remeasure
-      //InteractionManager.runAfterInteractions(() => {
-        this.measureChildRect();
-      //});
+      if (this.props.runAfterInteractions) {
+        InteractionManager.runAfterInteractions(() => {
+          this.measureChildRect();
+        });
+      } else {
+        InteractionManager.runAfterInteractions(() => {
+          this.measureChildRect();
+        });
+      }
     } else if (willBeVisible !== isVisible) {
       if (willBeVisible) {
         // We want to start the show animation only when contentSize is known
@@ -118,9 +131,15 @@ class Tooltip extends Component {
 
         // The location of the child element may have changed based on
         // transition animations in the corresponding view, so remeasure
-        //InteractionManager.runAfterInteractions(() => {
-          this.measureChildRect();
-        //});
+        if (this.props.runAfterInteractions) {
+          InteractionManager.runAfterInteractions(() => {
+            this.measureChildRect();
+          });
+        } else {
+          InteractionManager.runAfterInteractions(() => {
+            this.measureChildRect();
+          });
+        }
       } else {
         this._startAnimation({ show: false });
       }
@@ -581,7 +600,7 @@ class Tooltip extends Component {
                   {content}
                 </Animated.View>
               </Animated.View>
-              {noChildren ? null : this.renderChildInTooltip()}
+              {/*noChildren ? null : this.renderChildInTooltip()*/}
             </View>
           </TouchableWithoutFeedback>
         </Modal>
@@ -618,6 +637,7 @@ Tooltip.propTypes = {
   onClose: PropTypes.func,
   placement: PropTypes.string,
   childlessPlacementPadding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  runAfterInteractions: PropTypes.bool
 };
 
 export default Tooltip;
